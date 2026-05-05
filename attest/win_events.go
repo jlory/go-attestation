@@ -700,7 +700,9 @@ func (w *WinEvents) readELAMAggregation(rdr io.Reader, header microsoftEventHead
 		var err error
 		switch h.Type {
 		case elamAggregation:
-			w.readELAMAggregation(r, h)
+			if err := w.readELAMAggregation(r, h); err != nil {
+				return fmt.Errorf("nested ELAM aggregation: %w", err)
+			}
 			if r.N == 0 {
 				return nil
 			}
